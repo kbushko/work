@@ -19,7 +19,7 @@ window.onload = function () {
     var headerBar = document.getElementsByClassName('flex justify-between w-full')[0];
 
     var btn = document.createElement("BUTTON");
-    btn.innerText = 'LB!!!!!!';
+    btn.innerText = '  Get Stats  ';
     btn.setAttribute('type', 'button');
     btn.setAttribute('width', '100px');
 
@@ -44,8 +44,8 @@ function processCallRequests() {
 
     //add in the rejcetion reasons
     let rejectReason = table.getElementsByTagName('small');
-    for (var i = 0; i < rejectReason.length; i++) {
-       rejectionReasons.push(rejectReason[i].innerText);
+    for (let i = 0; i < rejectReason.length; i++) {
+        rejectionReasons.push(rejectReason[i].innerText);
     }
 
     console.log('Call Requests\n----------------------\nAccepted: ' + accepted +
@@ -63,7 +63,7 @@ function processPitchCalls() {
     let advancedByBoth = 0;
     let completed = 0;
 
-    for (var i = 1; i < rows.length; i++) {
+    for (let i = 1; i < rows.length; i++) {
         let companyOutcome = rows[i].getElementsByTagName('td')[2].getElementsByTagName('span')[0].getElementsByTagName('span')[0].className;
         let candidateOutcome = rows[i].getElementsByTagName('td')[4].getElementsByTagName('span')[0].getElementsByTagName('span')[0].className;
 
@@ -103,7 +103,7 @@ function proccessOnsites() {
 
     let completed = 0;
 
-    for (var i = 1; i < rows.length; i++) {
+    for (let i = 1; i < rows.length; i++) {
         var dateString = rows[i].getElementsByTagName('td')[5].innerText;
         dateString = dateString.substring(dateString.length - 4);
 
@@ -117,57 +117,37 @@ function proccessOnsites() {
 
 function processRejectionReasons() {
 
-    let noShare = 0;
-    let highRisk = 0;
-    let difValues = 0;
-    let badFit = 0;
-    let companySize = 0;
-    let notExciting = 0;
-    let notExcitingTech = 0;
-    let neverHeard = 0;
+    let reasonMap = new Map();
+    reasonMap.set("Risk too high", 0);
+    reasonMap.set("Values/mission not aligned", 0);
+    reasonMap.set("Role not a fit", 0);
+    reasonMap.set("Wrong company size for me", 0);
+    reasonMap.set("Product not exciting", 0);
+    reasonMap.set("Never heard of them", 0);
+    reasonMap.set("Tech not exciting", 0);
+
     let otherLen = 0;
     let other = "";
 
     //go through each rejection reason and categorize it
-    for (var i = 0; i < rejectionReasons.length; i++) {
+    for (let i = 0; i < rejectionReasons.length; i++) {
         if (!rejectionReasons[i].includes("(Didn't want to share reason with company)")) {
-            switch(rejectionReasons[i]) {
-                case("Risk too high"):
-                    highRisk++;
-                    break;
-                case("Values/mission not aligned"):
-                    difValues++;
-                    break;
-                case("Role not a fit"):
-                    badFit++;
-                    break;
-                case("Wrong company size for me"):
-                    companySize++;
-                    break;
-                case("Product not exciting"):
-                    notExciting++;
-                    break;
-                case("Never heard of them"):
-                    neverHeard++;
-                    break;
-                case("Tech not exciting"):
-                    notExcitingTech++;
-                    break;
-                default:
-                    otherLen++;
-                    other = other + rejectionReasons[i].substring(7) + "\n";
-                    break;
+            if (reasonMap.has(rejectionReasons[i])) {
+                let val = reasonMap.get(rejectionReasons[i]);
+                reasonMap.set(rejectionReasons[i], val + 1);
+            } else {
+                other = other + rejectionReasons[i].substring(7) + "\n";
+                otherLen++;
             }
         }
     }
 
+    let str = 'Rejection Reasons\n----------------------';
+    reasonMap.forEach(function(value, key, map) {
+        str += '\n' + key + ": " + value;
+    });
+    str += "\nOther: " + otherLen + "\n" + other;
+
     //print the results
-    console.log("Rejection Reasons\n----------------------\nRisk too high: " + highRisk +
-                "\nValues/mission not aligned: " + difValues +
-                "\nRole not a fit: " + badFit +
-                "\nWrong company size for me: " + companySize +
-                "\nProduct not exciting: " + notExciting +
-                "\nTech not exciting: " + notExcitingTech +
-                "\nNever heard of them: " + neverHeard +
-                "\nOther: " + otherLen + "\n" + other);
+    console.log(str);
 }
