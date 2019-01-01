@@ -15,6 +15,7 @@ var withdrawnClass = 'gray-link';
 var rejectionReasons = [];
 
 var advancedByBoth = 0;
+var completedPitchCalls = 0;
 
 window.onload = function () {
 
@@ -64,14 +65,13 @@ function processPitchCalls() {
 
     let advancedByCompany = 0;
     let advancedByCandidate = 0;
-    let completed = 0;
 
     for (let i = 1; i < rows.length; i++) {
         let companyOutcome = rows[i].getElementsByTagName('td')[2].getElementsByTagName('span')[0].getElementsByTagName('span')[0].className;
         let candidateOutcome = rows[i].getElementsByTagName('td')[4].getElementsByTagName('span')[0].getElementsByTagName('span')[0].className;
 
         if (companyOutcome == acceptedClass || companyOutcome == rejectedClass) {
-            completed++;
+            completedPitchCalls++;
         }
 
         if (companyOutcome == acceptedClass && candidateOutcome == acceptedClass) {
@@ -94,10 +94,10 @@ function processPitchCalls() {
         }
     }
 
-    console.log('Pitch Calls\n----------------------\nCompleted: ' + completed +
-                '\nAdvanced by Both: ' + advancedByBoth + ', ' + Math.round(advancedByBoth/completed*100) + '%' +
-                '\nAdvanced by Company: ' + advancedByCompany + ', ' + Math.round(advancedByCompany/completed*100) + '%' +
-                '\nAdvanced by Candidate: ' + advancedByCandidate + ', ' + Math.round(advancedByCandidate/completed*100) + '%' +
+    console.log('Pitch Calls\n----------------------\nCompleted: ' + completedPitchCalls +
+                '\nAdvanced by Both: ' + advancedByBoth + ', ' + Math.round(advancedByBoth/completedPitchCalls*100) + '%' +
+                '\nAdvanced by Company: ' + advancedByCompany + ', ' + Math.round(advancedByCompany/completedPitchCalls*100) + '%' +
+                '\nAdvanced by Candidate: ' + advancedByCandidate + ', ' + Math.round(advancedByCandidate/completedPitchCalls*100) + '%' +
                 '\n----------------------');
 }
 
@@ -106,18 +106,18 @@ function proccessOnsites() {
     let table = document.getElementById("company-stats-detail-table-onsites");
     let rows = table.getElementsByTagName('tr');
 
-    let completed = 0;
+    let completedOnsites = 0;
 
     for (let i = 1; i < rows.length; i++) {
         var dateString = rows[i].getElementsByTagName('td')[5].innerText;
         dateString = dateString.substring(dateString.length - 4);
 
         if (dateString == '2018') {
-            completed++;
+            completedOnsites++;
         }
     }
 
-    console.log('Onsites\n----------------------\nCompleted: ' + completed + ', ' + Math.round(completed/advancedByBoth*100) + '%' +
+    console.log('Onsites\n----------------------\nCompleted: ' + completedOnsites + ', ' + Math.round(completedOnsites/completedPitchCalls*100) + '%' +
                 '\n----------------------');
 }
 
