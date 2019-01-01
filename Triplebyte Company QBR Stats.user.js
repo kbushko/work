@@ -14,6 +14,8 @@ var expiredClass = 'orange-text';
 var withdrawnClass = 'gray-link';
 var rejectionReasons = [];
 
+var advancedByBoth = 0;
+
 window.onload = function () {
 
     var headerBar = document.getElementsByClassName('flex justify-between w-full')[0];
@@ -48,9 +50,11 @@ function processCallRequests() {
         rejectionReasons.push(rejectReason[i].innerText);
     }
 
-    console.log('Call Requests\n----------------------\nAccepted: ' + accepted +
-                '\nRejected: ' + rejected + '\nExpired: ' + expired +
-                '\nTotal: ' + (accepted + rejected + expired) + '\n----------------------');
+    console.log('Call Requests\n----------------------\nTotal: ' + (accepted + rejected + expired) +
+                '\nAccepted: ' + accepted + ', ' + Math.round(accepted/(accepted + rejected + expired)*100) + '%' +
+                '\nRejected: ' + rejected + ', ' + Math.round(rejected/(accepted + rejected + expired)*100) + '%' +
+                '\nExpired: ' + expired + ', ' + Math.round(expired/(accepted + rejected + expired)*100) + '%' +
+                '\n----------------------');
 }
 
 function processPitchCalls() {
@@ -60,7 +64,6 @@ function processPitchCalls() {
 
     let advancedByCompany = 0;
     let advancedByCandidate = 0;
-    let advancedByBoth = 0;
     let completed = 0;
 
     for (let i = 1; i < rows.length; i++) {
@@ -91,9 +94,11 @@ function processPitchCalls() {
         }
     }
 
-    console.log('Pitch Calls\n----------------------\nAdvanced by Company: ' + advancedByCompany +
-                '\nAdvanced by Candidate: ' + advancedByCandidate + '\nAdvanced by Both: ' + advancedByBoth +
-                '\nCompleted: ' + completed + '\n----------------------');
+    console.log('Pitch Calls\n----------------------\nCompleted: ' + completed +
+                '\nAdvanced by Both: ' + advancedByBoth + ', ' + Math.round(advancedByBoth/completed*100) + '%' +
+                '\nAdvanced by Company: ' + advancedByCompany + ', ' + Math.round(advancedByCompany/completed*100) + '%' +
+                '\nAdvanced by Candidate: ' + advancedByCandidate + ', ' + Math.round(advancedByCandidate/completed*100) + '%' +
+                '\n----------------------');
 }
 
 function proccessOnsites() {
@@ -112,7 +117,8 @@ function proccessOnsites() {
         }
     }
 
-    console.log('Onsites\n----------------------\nCompleted: ' + completed + '\n----------------------');
+    console.log('Onsites\n----------------------\nCompleted: ' + completed + ', ' + Math.round(completed/advancedByBoth*100) + '%' +
+                '\n----------------------');
 }
 
 function processRejectionReasons() {
